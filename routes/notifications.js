@@ -5,6 +5,16 @@ const Notification = require('../models/Notification')
 const router = express.Router()
 
 
+// Find by:Id
+router.get('/:notificationId', async (req, res) => {
+    try{
+        const post = await User.findById(req.params.userId)
+        res.json(post)
+    } catch (err) {
+        res.json({message: err})
+    }
+})
+
 
 router.post('/notification' , (req, res) => {
     const post = new User({
