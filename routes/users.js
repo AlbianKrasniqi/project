@@ -3,12 +3,9 @@ const User = require('../models/User')
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-    res.send('Ktu eshte User')
-})
 
 // Get All
-router.get('/user', function(req, res) {
+router.get('/', function(req, res) {
     User.find(function(err, data) {
         if(err){
             console.log(err)
@@ -20,7 +17,8 @@ router.get('/user', function(req, res) {
  })
 
 
-router.post('/user' , (req, res) => {
+// Create User
+router.post('/' , (req, res) => {
     const post = new User({
         first_name: req.body.first_name,
         last_name: req.body.last_name,
@@ -49,7 +47,22 @@ router.get('/:userId', async (req, res) => {
     }
 })
 
-// Delete user
+
+// Update User
+router.patch('/:userId', async (req ,res) => {
+    try{
+        const _id = req.params.id
+        const updatedUser = await User.updateOne(_id, req.body, {
+                new : true
+            }  )
+            res.send(updateUser)
+    } catch (err) {
+        res.json({message: err})
+    }    
+})
+
+
+// Delete User
 router.delete('/:userId', async (req ,res) => {
     try{
         const removeUser = await User.remove({_id: req.params.userId})
@@ -59,17 +72,6 @@ router.delete('/:userId', async (req ,res) => {
     }
 })
 
-// Update user
-router.patch('/:userId', async (req ,res) => {
-    try{
-        const updatedUser = await User.updateOne(
-            {_id : req.params.userId},
-            {$set : { first_name : req.body.first_name}},
-            )
-            res.json(updateUser)
-    } catch (err) {
-        res.json({message: err})
-    }    
-})
+
 
 module.exports = router
